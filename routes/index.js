@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 
 const router = express.Router();
 
@@ -6,6 +6,6 @@ const router = express.Router();
 //router.get('/', (req, res) => {res.send('Hello from the professional route!');});
 // localhost:8080/professional/
 
-router.use('/', require('../routes/users'));
+router.use("/", require("../routes/users"));
 // localhost:8080/professional/users
 module.exports = router;

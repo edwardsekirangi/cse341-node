@@ -11,9 +11,9 @@ const mongodb = require("./db/connect");
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost/Tododb");
 
-//inporting using the router in the main file 
-const usersRoutes = require('./routes/index');
-app.use('/users', usersRoutes);
+//inporting using the router in the main file
+const usersRoutes = require("./routes/index");
+app.use("/users", usersRoutes);
 
 //middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,17 +55,18 @@ const client = new MongoClient(uri, {
 
 //example routem
 app.get("/", (req, res) => {
-    res.send("Hello from the server! Working with pnpm and Express. Write /users to see the users route");
+    res.send(
+        "Hello from the server! Working with pnpm and Express. Write /users to see the users route",
+    );
 });
 
-
 mongodb.initDb((err, mongodb) => {
-  if (err) {
-    console.log(err);
-  } else {
-    app.listen(port);
-    console.log(`Connected to DB and listening on ${port}`);
-  }
+    if (err) {
+        console.log(err);
+    } else {
+        app.listen(port);
+        console.log(`Connected to DB and listening on ${port}`);
+    }
 });
 
 app.use(function (req, res) {
@@ -73,6 +74,3 @@ app.use(function (req, res) {
         url: req.originalUrl + " not found",
     });
 });
-
-
-
