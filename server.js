@@ -9,7 +9,7 @@ bodyParser = require("body-parser");
 const mongodb = require("./db/connect");
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
-mongoose.connect("process.env.MONGODB_URI");
+mongoose.connect(process.env.MONGODB_URI);
 
 //inporting using the router in the main file
 const usersRoutes = require("./routes/index");
