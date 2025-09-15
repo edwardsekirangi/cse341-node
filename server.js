@@ -51,11 +51,11 @@ const client = new MongoClient(uri, {
 // run().catch(console.dir);
 
 //Serving static files from the 'public' directory
-app.use(express.static("public"));
+//app.use(express.static("public"));
 
-//example route
+//example routem
 app.get("/", (req, res) => {
-    res.send("Hello from the server! Working with pnpm and Express.");
+    res.send("Hello from the server! Working with pnpm and Express. Write /users to see the users route");
 });
 
 
