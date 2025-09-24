@@ -10,18 +10,37 @@ const contactsController = require('../controllers/contacts');
  * @swagger
  * /contacts:
  *   get:
- *     summary: Get all contacts
+ *     summary: Retrieve all contacts
  *     tags: [Contacts]
  *     responses:
  *       200:
- *         description: A list of all contacts
+ *         description: A list of contacts
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   firstName:
+ *                     type: string
+ *                   lastName:
+ *                     type: string
+ *                   email:
+ *                     type: string
+ *                   favoriteColor:
+ *                     type: string
+ *                   birthday:
+ *                     type: string
+ *                   contact:
+ *                     type: string
  */
-router.get('/', contactsController.getAllContacts); // GET /professional/users/all
+router.get('/', contactsController.getAllContacts);// GET /professional/users/all
 /**
  * @swagger
  * /contacts/{id}:
  *   get:
- *     summary: Get a single contact by ID
+ *     summary: Retrieve a single contact by ID
  *     tags: [Contacts]
  *     parameters:
  *       - in: path
@@ -29,12 +48,29 @@ router.get('/', contactsController.getAllContacts); // GET /professional/users/a
  *         required: true
  *         schema:
  *           type: string
- *         description: The contact ID
+ *         description: MongoDB ObjectId of the contact
  *     responses:
  *       200:
  *         description: A single contact
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 firstName:
+ *                   type: string
+ *                 lastName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 favoriteColor:
+ *                   type: string
+ *                 birthday:
+ *                   type: string
+ *                 contact:
+ *                   type: string
  */
-router.get('/:id', contactsController.getSingle); // GET /professional/users/:id
+router.get('/:id', contactsController.getSingle);// GET /professional/users/:id
 /**
  * @swagger
  * /contacts/{id}:
@@ -47,7 +83,7 @@ router.get('/:id', contactsController.getSingle); // GET /professional/users/:id
  *         required: true
  *         schema:
  *           type: string
- *         description: The contact ID
+ *         description: MongoDB ObjectId of the contact
  *     requestBody:
  *       required: true
  *       content:
@@ -55,7 +91,15 @@ router.get('/:id', contactsController.getSingle); // GET /professional/users/:id
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               favoriteColor:
+ *                 type: string
+ *               birthday:
  *                 type: string
  *               contact:
  *                 type: string
@@ -63,7 +107,8 @@ router.get('/:id', contactsController.getSingle); // GET /professional/users/:id
  *       200:
  *         description: Contact updated successfully
  */
-router.put('/:id', contactsController.updateContact); // PUT /professional/users/
+router.put('/:id', contactsController.updateContact);// PUT /professional/users/
+/**
 /**
  * @swagger
  * /contacts:
@@ -77,10 +122,22 @@ router.put('/:id', contactsController.updateContact); // PUT /professional/users
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - firstName
+ *               - lastName
+ *               - email
+ *               - favoriteColor
+ *               - birthday
  *               - contact
  *             properties:
- *               name:
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               favoriteColor:
+ *                 type: string
+ *               birthday:
  *                 type: string
  *               contact:
  *                 type: string
@@ -101,12 +158,12 @@ router.post('/', contactsController.createContact);// POST /professional/users/
  *         required: true
  *         schema:
  *           type: string
- *         description: The contact ID
+ *         description: MongoDB ObjectId of the contact
  *     responses:
  *       200:
  *         description: Contact deleted successfully
  */
-router.delete('/:id', contactsController.deleteContact); // DELETE /professional/users/:id
+router.delete('/:id', contactsController.deleteContact);// DELETE /professional/users/:id
 //debug route
 router.get('/', (req, res) => {
     res.send(

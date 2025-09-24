@@ -44,7 +44,11 @@ const updateContact = async (req, res) => {
         const filter = { _id: new ObjectId(req.params.id) }; // or use email, username, etc.
         const update = {
             $set: {
-                name: req.body.name,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email,
+                favoriteColor: req.body.favoriteColor,
+                birthday: req.body.birthday,
                 contact: req.body.contact
                 // Add other fields to update
             }
@@ -69,9 +73,13 @@ const createContact = async (req, res) => {
         const db = await mongodb.getDb().db().collection('contacts');
 
         const newUser = {
-            name: req.body.name,
-            contact: req.body.contact
-            // Add other fields like password, role, etc.
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email,
+                favoriteColor: req.body.favoriteColor,
+                birthday: req.body.birthday,
+                contact: req.body.contact
+                // Add other fields to update
         };
 
         const result = await db.insertOne(newUser);
