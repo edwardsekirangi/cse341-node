@@ -13,7 +13,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:8080'
+        url: 'https://cse341-node-1-6eh0.onrender.com'  // Replace with your actual server URL
       }
     ]
   },
