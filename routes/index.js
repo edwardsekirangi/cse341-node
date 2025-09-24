@@ -1,11 +1,13 @@
-const express = require("express");
-
+const express = require('express');
 const router = express.Router();
 
-// GET /feed/posts
-//router.get('/', (req, res) => {res.send('Hello from the professional route!');});
-// localhost:8080/professional/
+// Import individual route modules
+const usersRouter = require('./users');
+const contactsRouter = require('./contacts');
 
-router.use("/", require("../routes/users"));
-// localhost:8080/professional/users
+// Mount them under their respective paths
+router.use('/users', usersRouter);
+router.use('/contacts', contactsRouter);
+
+// Export the router
 module.exports = router;

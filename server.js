@@ -1,76 +1,47 @@
-const express = require("express");
+const express = require('express'); 
 const app = express();
 
-// set port, listen for requests
-const port = process.env.PORT || 8080;
-require("dotenv").config();
-mongoose = require("mongoose");
-bodyParser = require("body-parser");
-const mongodb = require("./db/connect");
-// mongoose instance connection url connection
+require('dotenv').config(); // ✅ Load env variables early
+
+// ✅ Middleware (must come before routes)
+app.use((req, res, next) => {
+    if (req.method === 'DELETE') return next(); // skip parsing
+    express.json()(req, res, next);
+});
+
+app.use(express.urlencoded({ extended: true })); // Parses form data
+const { swaggerUi, swaggerSpec } = require('./swagger');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));// Swagger UI
+// ✅ MongoDB connection
+const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI);
 
-//inporting using the router in the main file
-const usersRoutes = require("./routes/index");
-app.use("/users", usersRoutes);
+// ✅ Custom DB connector (if used elsewhere)
+const mongodb = require('./db/connect');
 
-//middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// ✅ All of our Routes
+const routes = require('./routes');
+app.use('/', routes);
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
-const uri = process.env.MONGODB_URI;
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    },
+// ✅ Root route
+app.get('/', (req, res) => {
+    res.send('Hello from the server! Write /users to see the users route, and write /contacts to see the contacts route.');
 });
 
-//alternative connection method
-// async function run() {
-//     try {
-//         // Connect the client to the server	(optional starting in v4.7)
-//         await client.connect();
-//         // Send a ping to confirm a successful connection
-//         await client.db("admin").command({
-//             ping: 1,
-//         });
-//         console.log(
-//             "Pinged your deployment. You successfully connected to MongoDB!",
-//         );
-//     } finally {
-//         // Ensures that the client will close when you finish/error
-//         await client.close();
-//     }
-// }
-// run().catch(console.dir);
-
-//Serving static files from the 'public' directory
-//app.use(express.static("public"));
-
-//example routem
-app.get("/", (req, res) => {
-    res.send(
-        "Hello from the server! Working with pnpm and Express. Write /users to see the users route",
-    );
+// ✅ 404 handler (after all routes)
+app.use((req, res) => {
+    res.status(404).send({ url: req.originalUrl + ' not found' });
 });
 
+// ✅ Start server after DB is ready
+const port = process.env.PORT || 8080;
 mongodb.initDb((err, mongodb) => {
     if (err) {
         console.log(err);
     } else {
-        app.listen(port);
-        console.log(`Connected to DB and listening on ${port}`);
+        app.listen(port, () => {
+            console.log(`Connected to DB and listening on ${port}`);
+        });
     }
-});
-
-app.use(function (req, res) {
-    res.status(404).send({
-        url: req.originalUrl + " not found",
-    });
 });

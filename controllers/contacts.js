@@ -1,12 +1,13 @@
+//This is the contacts controller
 //get database connection
 const mongodb = require('../db/connect');
 const ObjectId = require('mongodb').ObjectId;
 
 //get all users
-const getAllUsers = async (req, res) => {
+const getAllContacts = async (req, res) => {
     try {
         //The constant variable that connects to the database
-        const result = await mongodb.getDb().db().collection('users').find();
+        const result = await mongodb.getDb().db().collection('contacts').find();
 
         //converting the result to an array and sending it as a json response
         result.toArray().then((users) => {
@@ -23,7 +24,7 @@ const getSingle = async (req, res) => {
         //First we get the user id from the request parameters and convert it to an ObjectId
         const userId = new ObjectId(req.params.id);
         //The constant variable that connects to the database
-        const result = await mongodb.getDb().db().collection('users').find({ _id: userId });
+        const result = await mongodb.getDb().db().collection('contacts').find({ _id: userId });
 
         //converting the result to an array and sending it as a json response
         result.toArray().then((users) => {
@@ -35,18 +36,16 @@ const getSingle = async (req, res) => {
     }
 };
 
-const updateUser = async (req, res) => {
+const updateContact = async (req, res) => {
     try {
-        const db = await mongodb.getDb().db().collection('users');
+        const db = await mongodb.getDb().db().collection('contacts');
 
         // Extract filter and update data from request body
         const filter = { _id: new ObjectId(req.params.id) }; // or use email, username, etc.
         const update = {
             $set: {
                 name: req.body.name,
-                username: req.body.username,
-                email: req.body.email,
-                ipAddress: req.body.ipAddress
+                contact: req.body.contact
                 // Add other fields to update
             }
         };
@@ -54,10 +53,10 @@ const updateUser = async (req, res) => {
         const result = await db.updateOne(filter, update);
 
         if (result.modifiedCount === 1) {
-            res.status(200).json({ message: 'User updated successfully' });
+            res.status(200).json({ message: 'Contact updated successfully' });
         } else {
             res.status(404).json({
-                message: 'User not found or no changes made'
+                message: 'Contact not found or no changes made'
             });
         }
     } catch (err) {
@@ -65,15 +64,13 @@ const updateUser = async (req, res) => {
     }
 };
 
-const createUser = async (req, res) => {
+const createContact = async (req, res) => {
     try {
-        const db = await mongodb.getDb().db().collection('users');
+        const db = await mongodb.getDb().db().collection('contacts');
 
         const newUser = {
             name: req.body.name,
-                username: req.body.username,
-                email: req.body.email,
-                ipAddress: req.body.ipAddress
+            contact: req.body.contact
             // Add other fields like password, role, etc.
         };
 
@@ -81,28 +78,28 @@ const createUser = async (req, res) => {
 
         if (result.acknowledged) {
             res.status(201).json({
-                message: 'User created successfully',
+                message: 'Contact created successfully',
                 userId: result.insertedId
             });
         } else {
-            res.status(500).json({ message: 'Failed to create user' });
+            res.status(500).json({ message: 'Failed to create contact' });
         }
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 };
 
-const deleteUser = async (req, res) => {
+const deleteContact = async (req, res) => {
     try {
-        const db = await mongodb.getDb().db().collection('users');
+        const db = await mongodb.getDb().db().collection('contacts');
 
         const userId = new ObjectId(req.params.id);
         const result = await db.deleteOne({ _id: userId });
 
         if (result.deletedCount === 1) {
-            res.status(200).json({ message: 'User deleted successfully' });
+            res.status(200).json({ message: 'Contact deleted successfully' });
         } else {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({ message: 'Contact not found' });
         }
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -111,9 +108,9 @@ const deleteUser = async (req, res) => {
 
 //exporting the functions to be used in other files
 module.exports = {
-    getAllUsers,
+    getAllContacts,
     getSingle,
-    updateUser,
-    createUser,
-    deleteUser
+    updateContact,
+    createContact,
+    deleteContact
 };
